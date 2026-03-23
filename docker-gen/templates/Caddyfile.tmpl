@@ -1,11 +1,4 @@
 {
-  log {
-    output file /data/caddy/caddy.log {
-      roll_size 100mb
-      roll_keep 100
-      roll_keep_for 720h
-    }
-  }
   servers {
     trusted_proxies cloudflare {
       interval 12h
@@ -85,7 +78,11 @@
 
   encode zstd gzip
   log {
-    output stdout
+    output file /data/caddy/access.log {
+      roll_size 100mb
+      roll_keep 100
+      roll_keep_for 720h
+    }
   }
 }
 {{ end }}
