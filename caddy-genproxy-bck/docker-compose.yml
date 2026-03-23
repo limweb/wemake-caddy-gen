@@ -1,0 +1,30 @@
+version: "3"
+services:
+  caddy-gen:
+    container_name: caddy-gen-proxy
+    image: "wemakeservices/caddy-gen:latest"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
+      - caddy-info:/data/caddy # needs volume to back up certificates
+      - caddy-data:/root/.caddy
+      - ./Caddyfile.bkp:/code/docker-gen/templates/Caddyfile.bkp
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2015"
+    environment:
+      - TZ=Asia/Bangkok
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "200"
+volumes:
+  caddy-data:
+  caddy-info:
+
+networks:
+  default:
+    external: true
+    name: proxy-network
